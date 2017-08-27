@@ -34,13 +34,14 @@
     <div class="control">
       <label>Tag</label>
       <select v-model="filters.tag" name="tag">
-        <option value="2017">bird</option>
-        <option value="2016">landscape</option>
-        <option value="2015">animal</option>
+        <option></option>
+        <option value="bird">bird</option>
+        <option value="landscape">landscape</option>
+        <option value="animal">animal</option>
       </select>
     </div>
 
-
+ <!--
     <div class="control">
       <label>Year</label>
       <select v-model="filters.year" name="year">
@@ -53,7 +54,7 @@
         <option value="2011">2011</option>
       </select>
     </div>
-
+-->
     <div class="control">
       <label>Order</label>
       <select v-model="filters.sort" name="order">
@@ -67,22 +68,23 @@
   </div>
 
   <div v-for="photo in photos" class="photo">
-    <h2 class="title">{{ photo.title }}</h2>
+    <h2 class="title" v-if="style === 'feed'">{{ photo.title }}</h2>
     <img :src="getImageSrc(photo)">
-    <div class="meta">
+    <div class="meta" v-if="style === 'feed'">
       <div class="tags">
         <span class="tag" v-for="tag in getPhotoTags(photo)">{{ tag }}</span>
       </div>
-      <div>
+      <div class="extra">
         <span class="exif action" @click="getEXIF(photo)" title="Load EXIF data, takes a few seconds">exif</span>
         <span class="data action" @click="toggleShowData(photo)" title="Show raw API response">data</span>
         <span class="taken">{{ photo.datetaken }}</span>
       </div>
     </div>
 
-    <p v-if="photo.description._content">{{photo.description._content}}</p>
+    <p v-if="photo.description._content && style === 'feed'">{{photo.description._content}}</p>
     <code v-if="photo.showData">{{ photo }}</code>
   </div>
+
 
   <!--<div style="margin: 2rem 0; text-align: center">-->
   <!--<button class="is-big" style="margin-left: auto;margin-right: auto">Load More</button>-->
@@ -110,7 +112,6 @@
     }
   }
 
-
   img {
     display: block;
     max-width: 100%;
@@ -128,15 +129,26 @@
     width: 100%
   }
 
+  .extra,
+  .tags {
+    margin-top: 0.4rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
   .tag {
     padding: 0.3rem 0.5rem;
     background-color: whitesmoke;
     font-weight: 600;
     font-size: 0.9rem;
+    margin-bottom: 0.3rem;
   }
 
   .tag:not(:last-of-type) {
-    margin-right: 0.6rem;
+    margin-right: 0.3rem;
   }
 
   .photo {
@@ -150,7 +162,8 @@
   .photo .meta {
     display: flex;
     justify-content: space-between;
-    margin: 1rem 0;
+    margin-bottom: 1rem;
+    margin-top: 0.4rem;
     flex-wrap: wrap;
   }
 
@@ -219,14 +232,13 @@
 
   .loading {
     padding: 1rem 2rem;
-    background-color: steelblue;
+    background-color: #212529;
     margin: 1rem 0;
     color: white;
     font-weight: 600;
     position: fixed;
     top: 1rem;
     right: 2rem;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
   }
 </style>
 </body>

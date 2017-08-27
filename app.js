@@ -24,7 +24,7 @@ const app = new Vue({
     if (!window.fetch || !window.Promise) {
       this.notice = "Your browser is too old, this won't work. Update and come back."
     }
-    if (window.location.host.substr(0,9) !== 'localhost') {
+    if (window.location.host.substr(0, 9) !== 'localhost') {
       this.getPhotos()
     }
 
@@ -59,8 +59,8 @@ const app = new Vue({
         localStorage.setItem('photos', JSON.stringify(this.photos))
         this.loading = false
       }).catch(err => {
-          this.loading = false
-        })
+        this.loading = false
+      })
     },
     getEXIF(photo) {
       if (photo.exif) {
@@ -84,9 +84,25 @@ const app = new Vue({
       return photo.tags.split(' ')
     },
     getFilters() {
-      // work out min_taken_date, max_taken_date based on selected year
+      // todo: work out min_taken_date, max_taken_date based on selected year
+      const filters = {}
+      const text = this.filters.text
+      const sort = this.filters.sort
+      const tag = this.filters.tag
 
-      return {}
+      if (text) {
+        filters.text = text
+      }
+
+      if (sort) {
+        filters.sort = sort
+      }
+
+      if (tag) {
+        filters.tags = tag // note the plural
+      }
+      return filters
+
     },
     getImageSrc(photo) {
       if (this.style === 'feed') {
