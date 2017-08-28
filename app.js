@@ -1,29 +1,30 @@
 const key = '55a59914b837cf3472a26f06a898ec1a'
 const user_id = '154269812@N04'
 
-function get (method, params) {
-  const url = new URL('https://api.flickr.com/services/rest/')
-  url.searchParams.append("api_key", key)
-  url.searchParams.append("format", "json")
-  url.searchParams.append("nojsoncallback", "1")
-  url.searchParams.append("method", method)
+function get (method, params, callback) {
+
+  let url = 'https://api.flickr.com/services/rest/?format=json&nojsoncallback=1'
+  url += '&api_key=' + key
+  url += '&method=' + method
+
+
   if (params) {
-    Object.keys(params).forEach(key => {
-      url.searchParams.append(key, params[key])
+    Object.keys(params).forEach(function(key) {
+      url += '&' + key + '=' + params[key]
     })
   }
-  return fetch(url, {
-    method: 'get',
-  }).then(r => r.json())
+  const request = new XMLHttpRequest()
+  request.onload = function(event) {
+    callback(JSON.parse(event.target.responseText))
+  }
+  request.open('GET', url)
+  request.send()
 }
 
 
 const app = new Vue({
   el: "#app",
   created() {
-    if (!window.fetch || !window.Promise) {
-      this.notice = "Your browser is too old, this won't work. Update and come back."
-    }
     if (window.location.host.substr(0, 9) !== 'localhost') {
       this.getPhotos()
     }
@@ -31,7 +32,6 @@ const app = new Vue({
   },
   data() {
     return {
-      notice: "",
       style: "feed",
       page: 1,
       loading: false,
@@ -54,12 +54,11 @@ const app = new Vue({
         extras: 'views,url_sq,url_t,url_s,url_q,url_m,url_l,geo,tags,description,date_taken,machine_tags'
       }
       const params = Object.assign({}, defaultParams, this.getFilters())
-      get("flickr.photos.search", params).then(data => {
-        this.photos = data.photos.photo
-        localStorage.setItem('photos', JSON.stringify(this.photos))
-        this.loading = false
-      }).catch(err => {
-        this.loading = false
+      const vm = this
+      get("flickr.photos.search", params, function(data) {
+        vm.photos = data.photos.photo
+        localStorage.setItem('photos', JSON.stringify(vm.photos))
+        vm.loading = false
       })
     },
     getEXIF(photo) {
@@ -70,9 +69,12 @@ const app = new Vue({
       const params = {
         photo_id: photo.id,
       }
-      get('flickr.photos.getExif', params).then(data => {
+      this.loading = true
+      const vm = this
+      get('flickr.photos.getExif', params, function(data) {
         Vue.set(photo, 'exif', data.photo)
         Vue.set(photo, 'showData', true)
+        vm.loading = false
       })
     },
     toggleShowData(photo) {

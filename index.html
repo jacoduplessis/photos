@@ -6,10 +6,159 @@
   <meta name="description" content="A personal collection of photos by Jaco du Plessis.">
   <meta name="twitter:site" content="@_jacodup">
   <meta property="og:site_name" content="Photos by Jaco">
+  <meta property="og:title" content="Photos by Jaco">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://farm5.staticflickr.com/4413/36005854184_929750b7ac_m.jpg">
   <meta itemprop="image" content="https://farm5.staticflickr.com/4413/36005854184_929750b7ac_m.jpg">
   <title>Photos by Jaco du Plessis</title>
+  <style>
+    body {
+      margin: 0 auto;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      max-width: 1024px;
+
+    }
+
+    @media screen and (max-width: 1020px) {
+      body {
+        padding: 0 1rem;
+      }
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-top: 0;
+    }
+
+    .notice {
+      padding: 2rem;
+      background-color: darkred;
+      color: #fff;
+      width: 100%
+    }
+
+    .extra,
+    .tags {
+      margin-top: 0.4rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 0.3rem 0.5rem;
+      background-color: whitesmoke;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .tag:not(:last-of-type) {
+      margin-right: 0.3rem;
+    }
+
+    .photo {
+      margin: 2rem 0;
+    }
+
+    .photo .title {
+      margin-bottom: 0.2rem;
+    }
+
+    .photo .meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      margin-top: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 3px;
+      background-color: #ddd;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: darkgray;
+    }
+
+    button.is-big {
+      padding: 0.8rem 1.2rem;
+    }
+
+    .btn-filter {
+      height: 2.3rem;
+      align-self: flex-end;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .action {
+      text-decoration: underline;
+      color: darkblue;
+      cursor: pointer;
+      margin-right: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+      padding: 0.3rem 0.6rem;
+      border-radius: 3px;
+      border: 2px solid #ccc;
+      height: 1.5rem;
+    }
+
+    select {
+      height: 2.3rem;
+      background-color: #fff;
+    }
+
+    .filters {
+      display: flex;
+      flex-flow: row wrap;
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      margin-right: 1rem;
+    }
+
+    [v-cloak] {
+      display: none
+    }
+
+    [v-cloak]:after {
+      content: "Loading..."
+    }
+
+    .loading {
+      padding: 1rem 2rem;
+      background-color: #212529;
+      margin: 1rem 0;
+      color: white;
+      font-weight: 600;
+      position: fixed;
+      top: 1rem;
+      right: 2rem;
+    }
+  </style>
 </head>
 <body>
 <h1 style="margin-bottom: 0">Photos</h1>
@@ -18,7 +167,6 @@
   This page loads images via the Flickr API and won't work without JavaScript enabled.
 </noscript>
 <div id="app" v-cloak>
-  <div v-if="notice" class="notice">{{notice}}</div>
 
   <span class="action" @click="showFilters = !showFilters">Filter</span>
   <div class="loading" v-if="loading">Loading...</div>
@@ -47,20 +195,20 @@
       </select>
     </div>
 
- <!--
-    <div class="control">
-      <label>Year</label>
-      <select v-model="filters.year" name="year">
-        <option value="2017">2017</option>
-        <option value="2016">2016</option>
-        <option value="2015">2015</option>
-        <option value="2014">2014</option>
-        <option value="2013">2013</option>
-        <option value="2012">2012</option>
-        <option value="2011">2011</option>
-      </select>
-    </div>
--->
+    <!--
+       <div class="control">
+         <label>Year</label>
+         <select v-model="filters.year" name="year">
+           <option value="2017">2017</option>
+           <option value="2016">2016</option>
+           <option value="2015">2015</option>
+           <option value="2014">2014</option>
+           <option value="2013">2013</option>
+           <option value="2012">2012</option>
+           <option value="2011">2011</option>
+         </select>
+       </div>
+   -->
     <div class="control">
       <label>Order</label>
       <select v-model="filters.sort" name="order">
@@ -99,153 +247,6 @@
 <script src="https://unpkg.com/vue@2.4.2/dist/vue.min.js"></script>
 <script src="app.js"></script>
 
-<style>
-  body {
-    margin: 0 auto;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    background-color: #fff;
-    max-width: 1024px;
 
-  }
-
-  @media screen and (max-width: 1020px) {
-    body {
-      padding: 0 1rem;
-    }
-  }
-
-  img {
-    display: block;
-    max-width: 100%;
-  }
-
-  .subtitle {
-    color: #666;
-    margin-top: 0;
-  }
-
-  .notice {
-    padding: 2rem;
-    background-color: darkred;
-    color: #fff;
-    width: 100%
-  }
-
-  .extra,
-  .tags {
-    margin-top: 0.4rem;
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    padding: 0.3rem 0.5rem;
-    background-color: whitesmoke;
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 0.3rem;
-  }
-
-  .tag:not(:last-of-type) {
-    margin-right: 0.3rem;
-  }
-
-  .photo {
-    margin: 2rem 0;
-  }
-
-  .photo .title {
-    margin-bottom: 0.2rem;
-  }
-
-  .photo .meta {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    margin-top: 0.4rem;
-    flex-wrap: wrap;
-  }
-
-  button {
-    padding: 0.4rem 0.8rem;
-    border: none;
-    border-radius: 3px;
-    background-color: #ddd;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: darkgray;
-  }
-
-  button.is-big {
-    padding: 0.8rem 1.2rem;
-  }
-
-  .btn-filter {
-    height: 2.3rem;
-    align-self: flex-end;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .action {
-    text-decoration: underline;
-    color: darkblue;
-    cursor: pointer;
-    margin-right: 0.4rem;
-  }
-
-  input[type="text"],
-  input[type="date"],
-  select {
-    padding: 0.3rem 0.6rem;
-    border-radius: 3px;
-    border: 2px solid #ccc;
-    height: 1.5rem;
-  }
-
-  select {
-    height: 2.3rem;
-    background-color: #fff;
-  }
-
-  .filters {
-    display: flex;
-    flex-flow: row wrap;
-  }
-
-  .control {
-    display: flex;
-    flex-direction: column;
-    margin-right: 1rem;
-  }
-
-  [v-cloak] {
-    display: none
-  }
-
-  [v-cloak]:after {
-    content: "Loading..."
-  }
-
-  .loading {
-    padding: 1rem 2rem;
-    background-color: #212529;
-    margin: 1rem 0;
-    color: white;
-    font-weight: 600;
-    position: fixed;
-    top: 1rem;
-    right: 2rem;
-  }
-</style>
 </body>
 </html>
