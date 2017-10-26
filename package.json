@@ -1,0 +1,15 @@
+{
+  "name": "photos",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:jacoduplessis/photos.git",
+  "author": "Jaco du Plessis <jaco@jacoduplessis.co.za>",
+  "scripts": {
+    "build": "svelte compile -f iife -n Photos App.html > photos.js",
+    "build:dev": "svelte compile -d -m -f iife -n Photos App.html> photos.js"
+  },
+  "devDependencies": {
+    "svelte": "^1.41.1",
+    "svelte-cli": "^1.4.0"
+  }
+}

@@ -1,0 +1,274 @@
+<!--<span class="action" on:click="set({showFilters: !showFilters})">Filter</span>-->
+{{#if loading}}
+<div class="loading">Loading...</div>
+{{/if}}
+
+{{#if showFilters}}
+
+<div class="filters">
+  <div class="control">
+    <label>Search</label>
+    <input type="text" name="search" bind:value="filters.text">
+  </div>
+
+  <div class="control">
+    <label>Tag</label>
+    <select v-model="filters.tag" name="tag">
+      <option></option>
+      <option value="bird">bird</option>
+      <option value="landscape">landscape</option>
+      <option value="animal">animal</option>
+    </select>
+  </div>
+
+  <!--
+     <div class="control">
+       <label>Year</label>
+       <select v-model="filters.year" name="year">
+         <option value="2017">2017</option>
+         <option value="2016">2016</option>
+         <option value="2015">2015</option>
+         <option value="2014">2014</option>
+         <option value="2013">2013</option>
+         <option value="2012">2012</option>
+         <option value="2011">2011</option>
+       </select>
+     </div>
+ -->
+  <div class="control">
+    <label>Order</label>
+    <select v-model="filters.sort" name="order">
+      <option value="date-taken-desc" selected>Newer First</option>
+      <option value="date-taken-asc">Older First</option>
+    </select>
+  </div>
+  <!--<button @click="getPhotos" class="btn-filter">Filter</button>-->
+</div>
+{{/if}}
+
+
+<div class="photos">
+  {{#each photos as photo}}
+  <a class="photo" href="{{ photo.url_l }}"
+     data-caption="{{ photo.title }} {{photo.datetaken}} {{photo.description._content}}">
+    <img src="{{ photo.url_q }}" title="{{ photo.title }}" alt="{{ photo.title }}">
+  </a>
+  {{/each}}
+</div>
+
+{{#if hasNextPage}}
+<button on:click="appendPage(page+1)" style="display: flex; margin: 1rem auto">Load More ({{page+1}} of {{ pages }}, {{total}} total)</button>
+{{/if}}
+<script>
+  export default {
+    data: function () {
+      return {
+        api_key: '',
+        user_id: '',
+        filters: {},
+        photos: [],
+        loading: false,
+        showFilters: false,
+        total: 0,
+        page: 1,
+        pages: 1,
+      }
+    },
+    computed: {
+      hasNextPage: function (page, pages) {
+        return pages !== 0 && page < pages
+      }
+    },
+    methods: {
+      getJSON: function (method, params) {
+        let url = 'https://api.flickr.com/services/rest/?format=json&nojsoncallback=1'
+        url += '&api_key=' + this.get('api_key')
+        url += '&method=' + method
+        if (params) {
+          Object.keys(params).forEach(function (key) {
+            url += '&' + key + '=' + params[key]
+          })
+        }
+
+        return fetch(url).then(r => r.json())
+
+      },
+      appendPage(page) {
+        this.getPhotos({page: page}, true)
+      },
+      getPhotos: function (adhocFilters, append) {
+
+        this.set({loading: true})
+        const defaultParams = {
+          user_id: this.get('user_id'),
+          extras: 'views,url_sq,url_t,url_s,url_q,url_m,url_l,geo,tags,description,date_taken,machine_tags'
+        }
+        const params = Object.assign({}, defaultParams, this.get('filters'), adhocFilters || {})
+        this.getJSON("flickr.photos.search", params).then(data => {
+          const newPhotos = data.photos.photo
+          const photos = append ? this.get('photos').concat(newPhotos) : newPhotos
+          this.set({
+            photos: photos,
+            pages: data.photos.pages,
+            total: data.photos.total,
+            page: data.photos.page,
+            loading: false
+          })
+        })
+      },
+      setDeep: function (keypath, value) {
+        if (keypath === undefined) {
+          return;
+        }
+        var keys = keypath.replace(/\[(\d+)\]/g, '.$1').split('.');
+        var lastKey = keys.pop();
+        // If not a nested keypath
+        if (keys[0] === undefined) {
+          var data_1 = {};
+          data_1[lastKey] = value;
+          this.set(data_1);
+          return;
+        }
+        var object = this.get(keys[0]);
+        for (var i = 1; i < keys.length; i++) {
+          object = object[keys[i]];
+        }
+        object[lastKey] = value;
+        var data = {};
+        data[keys[0]] = this.get(keys[0]);
+        this.set(data);
+      }
+    }
+  }
+
+  const api_key = '55a59914b837cf3472a26f06a898ec1a'
+  const user_id = '154269812@N04'
+
+</script>
+
+<style>
+  .loading {
+    padding: 0.3rem 1rem;
+    background-color: #666;
+    margin: 1rem 0;
+    color: white;
+    font-weight: 600;
+    position: fixed;
+    top: 1rem;
+    right: 2rem;
+  }
+
+  .photos {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+  }
+
+  .photos .photo {
+    margin: 0 1rem 1rem 0;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .notice {
+    padding: 2rem;
+    background-color: darkred;
+    color: #fff;
+    width: 100%
+  }
+
+  .extra,
+  .tags {
+    margin-top: 0.4rem;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    padding: 0.3rem 0.5rem;
+    background-color: whitesmoke;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .tag:not(:last-of-type) {
+    margin-right: 0.3rem;
+  }
+
+  .photo {
+    margin: 2rem 0;
+  }
+
+  .photo .title {
+    margin-bottom: 0.2rem;
+  }
+
+  .photo .meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    margin-top: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  button {
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 3px;
+    background-color: #ddd;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: darkgray;
+  }
+
+  button.is-big {
+    padding: 0.8rem 1.2rem;
+  }
+
+  .btn-filter {
+    height: 2.3rem;
+    align-self: flex-end;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .action {
+    text-decoration: underline;
+    color: darkblue;
+    cursor: pointer;
+    margin-right: 0.4rem;
+  }
+
+  input[type="text"],
+  select {
+    padding: 0.3rem 0.6rem;
+    border-radius: 3px;
+    border: 2px solid #ccc;
+    height: 1.5rem;
+  }
+
+  select {
+    height: 2.3rem;
+    background-color: #fff;
+  }
+
+  .filters {
+    display: flex;
+    flex-flow: row wrap;
+  }
+
+  .control {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+  }
+</style>

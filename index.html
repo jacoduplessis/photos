@@ -5,247 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="A personal collection of photos by Jaco du Plessis.">
   <meta name="twitter:site" content="@_jacodup">
-  <meta property="og:site_name" content="Photos by Jaco">
-  <meta property="og:title" content="Photos by Jaco">
+  <meta property="og:site_name" content="Photos by Jaco du Plessis">
+  <meta property="og:title" content="Photos by Jaco du Plessis">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://farm5.staticflickr.com/4413/36005854184_929750b7ac_m.jpg">
   <meta itemprop="image" content="https://farm5.staticflickr.com/4413/36005854184_929750b7ac_m.jpg">
   <title>Photos by Jaco du Plessis</title>
   <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      margin: 0 auto;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
       font-size: 1rem;
       font-weight: 400;
       line-height: 1.5;
       color: #212529;
       background-color: #fff;
+    }
+
+    .container {
       max-width: 1024px;
-
+      padding: 0 1rem;
+      margin: 0 auto;
     }
 
-    @media screen and (max-width: 1020px) {
-      body {
-        padding: 0 1rem;
-      }
-    }
-
-    img {
-      display: block;
-      max-width: 100%;
-    }
-
-    .subtitle {
-      color: #666;
-      margin-top: 0;
-    }
-
-    .notice {
-      padding: 2rem;
-      background-color: darkred;
-      color: #fff;
-      width: 100%
-    }
-
-    .extra,
-    .tags {
-      margin-top: 0.4rem;
-    }
-
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .tag {
-      padding: 0.3rem 0.5rem;
-      background-color: whitesmoke;
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .tag:not(:last-of-type) {
-      margin-right: 0.3rem;
-    }
-
-    .photo {
-      margin: 2rem 0;
-    }
-
-    .photo .title {
-      margin-bottom: 0.2rem;
-    }
-
-    .photo .meta {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-      margin-top: 0.4rem;
-      flex-wrap: wrap;
-    }
-
-    button {
-      padding: 0.4rem 0.8rem;
-      border: none;
-      border-radius: 3px;
-      background-color: #ddd;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: darkgray;
-    }
-
-    button.is-big {
-      padding: 0.8rem 1.2rem;
-    }
-
-    .btn-filter {
-      height: 2.3rem;
-      align-self: flex-end;
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-
-    .action {
-      text-decoration: underline;
-      color: darkblue;
-      cursor: pointer;
-      margin-right: 0.4rem;
-    }
-
-    input[type="text"],
-    input[type="date"],
-    select {
-      padding: 0.3rem 0.6rem;
-      border-radius: 3px;
-      border: 2px solid #ccc;
-      height: 1.5rem;
-    }
-
-    select {
-      height: 2.3rem;
-      background-color: #fff;
-    }
-
-    .filters {
-      display: flex;
-      flex-flow: row wrap;
-    }
-
-    .control {
-      display: flex;
-      flex-direction: column;
-      margin-right: 1rem;
-    }
-
-    [v-cloak] {
-      display: none
-    }
-
-    [v-cloak]:after {
-      content: "Loading..."
-    }
-
-    .loading {
-      padding: 1rem 2rem;
-      background-color: #212529;
-      margin: 1rem 0;
-      color: white;
-      font-weight: 600;
-      position: fixed;
-      top: 1rem;
-      right: 2rem;
-    }
   </style>
 </head>
 <body>
-<h1 style="margin-bottom: 0">Photos</h1>
-<h2 class="subtitle">by Jaco du Plessis</h2>
+<div class="container">
+  <h1 style="margin-bottom: 0">Photos <span style="color: #666; margin-top: 0; font-size: 0.7em">by Jaco du Plessis</span></h1>
+</div>
+
 <noscript>
   This page loads images via the Flickr API and won't work without JavaScript enabled.
 </noscript>
-<div id="app" v-cloak>
-
-  <span class="action" @click="showFilters = !showFilters">Filter</span>
-  <div class="loading" v-if="loading">Loading...</div>
-
-  <div style="margin: 1rem 0" v-show="showFilters">
-    <strong>Display: </strong>
-    <label>Feed</label>
-    <input type="radio" name="style" value="feed" v-model="style">
-    <label>Grid</label>
-    <input type="radio" name="style" value="grid" v-model="style">
-  </div>
-
-  <div class="filters" v-if="showFilters">
-    <div class="control">
-      <label>Search</label>
-      <input type="text" name="search" v-model="filters.text">
-    </div>
-
-    <div class="control">
-      <label>Tag</label>
-      <select v-model="filters.tag" name="tag">
-        <option></option>
-        <option value="bird">bird</option>
-        <option value="landscape">landscape</option>
-        <option value="animal">animal</option>
-      </select>
-    </div>
-
-    <!--
-       <div class="control">
-         <label>Year</label>
-         <select v-model="filters.year" name="year">
-           <option value="2017">2017</option>
-           <option value="2016">2016</option>
-           <option value="2015">2015</option>
-           <option value="2014">2014</option>
-           <option value="2013">2013</option>
-           <option value="2012">2012</option>
-           <option value="2011">2011</option>
-         </select>
-       </div>
-   -->
-    <div class="control">
-      <label>Order</label>
-      <select v-model="filters.sort" name="order">
-        <option value="date-taken-desc" selected>Newer First</option>
-        <option value="date-taken-asc">Older First</option>
-      </select>
-    </div>
-
-
-    <button @click="getPhotos" class="btn-filter">Filter</button>
-  </div>
-
-  <div v-for="photo in photos" class="photo">
-    <h2 class="title" v-if="style === 'feed'">{{ photo.title }}</h2>
-    <img :src="getImageSrc(photo)">
-    <div class="meta" v-if="style === 'feed'">
-      <div class="tags">
-        <span class="tag" v-for="tag in getPhotoTags(photo)">{{ tag }}</span>
-      </div>
-      <div class="extra">
-        <span class="exif action" @click="getEXIF(photo)" title="Load EXIF data, takes a few seconds">exif</span>
-        <span class="data action" @click="toggleShowData(photo)" title="Show raw API response">data</span>
-        <span class="taken">{{ photo.datetaken }}</span>
-      </div>
-    </div>
-
-    <p v-if="photo.description._content && style === 'feed'">{{photo.description._content}}</p>
-    <code v-if="photo.showData">{{ photo }}</code>
-  </div>
-
-
-  <!--<div style="margin: 2rem 0; text-align: center">-->
-  <!--<button class="is-big" style="margin-left: auto;margin-right: auto">Load More</button>-->
-  <!--</div>-->
+<div id="app">
 </div>
-<script src="https://unpkg.com/vue@2.4.2/dist/vue.min.js"></script>
-<script src="app.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/baguettebox.js@1.9.1/dist/baguetteBox.min.css">
+<script src="https://unpkg.com/baguettebox.js@1.9.1/dist/baguetteBox.min.js"></script>
+<script src="photos.js"></script>
+<script>
+
+
+  const app = new Photos({
+    target: document.querySelector('#app'),
+    data: {
+      api_key: '55a59914b837cf3472a26f06a898ec1a',
+      user_id: '154269812@N04', // jacoduplessis
+//      user_id: '141116004@N06', // two monkeys
+      filters: {
+        per_page: 10,
+      }
+    }
+  })
+  app.getPhotos()
+
+  var box
+  app.observe('photos', photos => {
+    if (photos.length === 0) return
+    if (box) box.destroy()
+    box = baguetteBox.run('.photos', {
+      captions: true,
+      titleTag: true,
+    })
+  }, {
+    init: false,
+    defer: true,
+  })
+</script>
 
 
 </body>
