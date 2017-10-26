@@ -1,15 +1,20 @@
 {
   "name": "photos",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "git@github.com:jacoduplessis/photos.git",
   "author": "Jaco du Plessis <jaco@jacoduplessis.co.za>",
   "scripts": {
-    "build": "svelte compile -f iife -n Photos App.html > photos.js",
-    "build:dev": "svelte compile -d -m -f iife -n Photos App.html> photos.js"
+    "build": "NODE_ENV=production node build.js",
+    "build:dev": "NODE_ENV=development node build.js"
   },
   "devDependencies": {
-    "svelte": "^1.41.1",
-    "svelte-cli": "^1.4.0"
+    "rollup": "^0.50.0",
+    "rollup-plugin-buble": "^0.16.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-svelte": "^3.1.0",
+    "rollup-plugin-uglify": "^2.0.1",
+    "svelte": "^1.40.2",
+    "svelte-extras": "^1.5.3",
+    "uglify-js": "^3.1.3"
   }
 }

@@ -35,8 +35,8 @@
   </style>
 </head>
 <body>
-<div class="container">
-  <h1 style="margin-bottom: 0">Photos <span style="color: #666; margin-top: 0; font-size: 0.7em">by Jaco du Plessis</span></h1>
+<div class="container" style="text-align: center; margin: 1rem auto">
+  <h1>Photos <span style="color: #666; font-size: 0.7em">by Jaco du Plessis</span></h1>
 </div>
 
 <noscript>
@@ -46,11 +46,13 @@
 </div>
 <link rel="stylesheet" href="https://unpkg.com/baguettebox.js@1.9.1/dist/baguetteBox.min.css">
 <script src="https://unpkg.com/baguettebox.js@1.9.1/dist/baguetteBox.min.js"></script>
-<script src="photos.js"></script>
+
+<link rel="stylesheet" href="dist/photos.css">
+<script src="dist/photos.js"></script>
 <script>
 
 
-  const app = new Photos({
+  var app = new Photos({
     target: document.querySelector('#app'),
     data: {
       api_key: '55a59914b837cf3472a26f06a898ec1a',
@@ -64,7 +66,7 @@
   app.getPhotos()
 
   var box
-  app.observe('photos', photos => {
+  app.observe('photos', function(photos) {
     if (photos.length === 0) return
     if (box) box.destroy()
     box = baguetteBox.run('.photos', {
