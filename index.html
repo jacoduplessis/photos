@@ -79,6 +79,21 @@
   })
 </script>
 
-
+<noscript>
+  <img src="https://app.voxpop.co.za/stats/" alt="" style="display: none">
+</noscript>
+<script>
+  (function() {
+    var i = document.createElement('img');
+    var u = 'https://app.voxpop.co.za/stats/';
+    var r = document.referrer;
+    if (r) {
+      u += '?referrer=' + r;
+    }
+    i.src = u;
+    i.style.display = 'none';
+    document.body.appendChild(i);
+  })();
+</script>
 </body>
 </html>
